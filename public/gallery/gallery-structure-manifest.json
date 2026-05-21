@@ -1,0 +1,52 @@
+{
+  "galleryRoot": "/gallery",
+  "jobsPerServicePrepared": 5,
+  "sections": {
+    "mowing": [
+      "standard-residential-lawn-maintenance",
+      "complete-residential-mulch-finish-lawn-maintenance",
+      "premium-residential-lawn-maintenance",
+      "complete-residential-lawn-maintenance",
+      "commercial-grounds-maintenance"
+    ],
+    "garden-care": [
+      "garden-tidy-ups",
+      "light-pruning-and-trimming",
+      "weed-removal",
+      "green-waste-clean-up",
+      "hedge-trimming",
+      "decorative-shaping",
+      "boundary-hedge-maintenance",
+      "debris-clean-up",
+      "garden-bed-removal",
+      "miscellaneous-garden-labour-and-outdoor-assistance"
+    ],
+    "property-restoration": [
+      "selective-weed-treatment",
+      "fence-line-weed-control",
+      "targeted-spray-application",
+      "overgrown-yard-restoration",
+      "vegetation-reduction",
+      "waste-removal",
+      "property-presentation-improvement",
+      "small-tree-removal",
+      "overgrown-vegetation-clearing",
+      "palm-and-unwanted-plant-removal",
+      "branch-and-limb-removal",
+      "site-clean-up-and-green-waste-removal",
+      "safe-and-professional-property-presentation-finish"
+    ]
+  },
+  "photoNamingExample": {
+    "before": [
+      "before-1.jpg",
+      "before-2.jpg",
+      "before-3.jpg"
+    ],
+    "after": [
+      "after-1.jpg",
+      "after-2.jpg",
+      "after-3.jpg"
+    ]
+  }
+}
