@@ -1,11 +1,15 @@
+"use client";
+
 type ServiceCategoryCardProps = {
   title: string;
+  galleryLink?: string;
   description: string;
   includes: string[];
 };
 
 export default function ServiceCategoryCard({
   title,
+  galleryLink,
   description,
   includes,
 }: ServiceCategoryCardProps) {
@@ -23,6 +27,20 @@ export default function ServiceCategoryCard({
           </li>
         ))}
       </ul>
+
+      {galleryLink && (
+        <a
+          href={galleryLink}
+          onClick={(event) => {
+            event.preventDefault();
+
+            window.location.href = galleryLink;
+          }}
+          className="mt-6 inline-flex items-center rounded-full border border-green-300/30 px-4 py-2 text-sm font-semibold text-[#66ffcc] transition hover:bg-green-300 hover:text-black"
+        >
+          View in Gallery →
+        </a>
+      )}
     </article>
   );
 }

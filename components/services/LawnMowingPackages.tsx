@@ -18,16 +18,77 @@ export default function LawnMowingPackages() {
           upkeep, and outstanding results across homes, businesses, and managed properties.
         </p>
 
-        <div className="mt-12 grid gap-10 lg:grid-cols-2">
+        <div className="mt-12 space-y-20">
           <div>
             <h3 id="residential-lawn-mowing" className="mb-5 text-2xl font-bold text-green-300">
               Residential Lawn Mowing
             </h3>
 
-            <div className="space-y-6">
-              {lawnMowingServices.residential.map((service) => (
-                <ServiceCategoryCard key={service.title} {...service} />
-              ))}
+            <div className="space-y-10">
+              <div>
+                <h4 className="mb-4 text-xl font-bold text-white">
+                  Residential Lawn Mowing Packages
+                </h4>
+
+                <div className="space-y-6">
+                  {lawnMowingServices.residentialPackages.map((service) => (
+                    <div
+                      key={service.title}
+                      id={service.galleryLink.split("#")[1]}
+                      className="scroll-mt-32"
+                    >
+                      <ServiceCategoryCard {...service} />
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <h4 className="mb-4 text-xl font-bold text-white">
+                  Individual Residential Lawn Services
+                </h4>
+
+                <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
+                  {lawnMowingServices.whippersnipping.map((service) => (
+                    <div
+                      key={service.title}
+                      id={service.galleryLink.split("#")[1]}
+                      className="scroll-mt-32"
+                    >
+                      <ServiceCategoryCard {...service} />
+                    </div>
+                  ))}
+
+                  {lawnMowingServices.edging.map((service) => (
+                    <div
+                      key={service.title}
+                      id={service.galleryLink.split("#")[1]}
+                      className="scroll-mt-32"
+                    >
+                      <ServiceCategoryCard {...service} />
+                    </div>
+                  ))}
+                  {lawnMowingServices.mowingOnly.map((service) => (
+                    <div
+                      key={service.title}
+                      id={service.galleryLink.split("#")[1]}
+                      className="scroll-mt-32"
+                    >
+                      <ServiceCategoryCard {...service} />
+                    </div>
+                  ))}
+
+                  {lawnMowingServices.blowDownOnly.map((service) => (
+                    <div
+                      key={service.title}
+                      id={service.galleryLink.split("#")[1]}
+                      className="scroll-mt-32"
+                    >
+                      <ServiceCategoryCard {...service} />
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
 
@@ -38,7 +99,13 @@ export default function LawnMowingPackages() {
 
             <div className="space-y-6">
               {lawnMowingServices.commercial.map((service) => (
-                <ServiceCategoryCard key={service.title} {...service} />
+                <div
+                  key={service.title}
+                  id={service.galleryLink.split("#")[1]}
+                  className="scroll-mt-32"
+                >
+                  <ServiceCategoryCard {...service} />
+                </div>
               ))}
             </div>
           </div>

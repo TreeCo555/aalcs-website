@@ -20,7 +20,9 @@ export default function GardeningServices() {
 
         <div className="mt-12 grid gap-8 md:grid-cols-2 xl:grid-cols-3">
           {gardeningServices.map((service) => (
-            <ServiceCategoryCard key={service.title} {...service} />
+            <div key={service.title} id={service.galleryLink.split("#")[1]} className="scroll-mt-32">
+              <ServiceCategoryCard {...service} />
+            </div>
           ))}
         </div>
       </div>

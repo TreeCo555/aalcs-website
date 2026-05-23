@@ -21,7 +21,9 @@ export default function PropertyCareServices() {
 
         <div className="mt-12 grid gap-8 md:grid-cols-2 xl:grid-cols-3">
           {propertyCareServices.map((service) => (
-            <ServiceCategoryCard key={service.title} {...service} />
+            <div key={service.title} id={service.galleryLink.split("#")[1]} className="scroll-mt-32">
+              <ServiceCategoryCard {...service} />
+            </div>
           ))}
         </div>
       </div>

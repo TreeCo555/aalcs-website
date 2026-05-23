@@ -1,3 +1,5 @@
+"use client";
+import { ChangeEvent, FormEvent, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
@@ -12,6 +14,52 @@ import {
 } from "lucide-react";
 
 export default function ContactPage() {
+  const [formData, setFormData] = useState({
+    name: "",
+    phone: "",
+    email: "",
+    subject: "",
+    message: "",
+  });
+
+  const [loading, setLoading] = useState(false);
+
+  const handleChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setLoading(true);
+
+    const response = await fetch("/api/contact", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(formData),
+    });
+
+    if (response.ok) {
+      alert("Message sent successfully!");
+      setFormData({
+        name: "",
+        phone: "",
+        email: "",
+        subject: "",
+        message: "",
+      });
+    } else {
+      alert("Something went wrong. Please try again.");
+    }
+
+    setLoading(false);
+  };
   return (
     <main className="overflow-hidden bg-black text-white">
       <section className="relative min-h-[390px]">
@@ -51,39 +99,54 @@ export default function ContactPage() {
               </h2>
             </div>
 
-            <form className="grid gap-4">
+            <form onSubmit={handleSubmit} className="grid gap-4">
               <div className="grid gap-4 md:grid-cols-2">
                 <input
-                  placeholder="Your Name"
-                  className="rounded-md border border-white/15 bg-black/45 px-4 py-4 text-sm outline-none transition focus:border-[#69ff2f]"
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+                placeholder="Your Name"
+                className="rounded-md border border-white/15 bg-black/45 px-4 py-4 text-sm outline-none transition focus:border-[#69ff2f]"
                 />
                 <input
-                  placeholder="Phone Number"
-                  className="rounded-md border border-white/15 bg-black/45 px-4 py-4 text-sm outline-none transition focus:border-[#69ff2f]"
+                name="phone"
+                value={formData.phone}
+                onChange={handleChange}
+                placeholder="Phone Number"
+                className="rounded-md border border-white/15 bg-black/45 px-4 py-4 text-sm outline-none transition focus:border-[#69ff2f]"
                 />
               </div>
 
-              <input
+                <input
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
                 placeholder="Email Address"
                 className="rounded-md border border-white/15 bg-black/45 px-4 py-4 text-sm outline-none transition focus:border-[#69ff2f]"
-              />
+                />
 
-              <input
+                <input
+                name="subject"
+                value={formData.subject}
+                onChange={handleChange}
                 placeholder="Subject"
                 className="rounded-md border border-white/15 bg-black/45 px-4 py-4 text-sm outline-none transition focus:border-[#69ff2f]"
-              />
+                />
 
-              <textarea
+                <textarea
+                name="message"
+                value={formData.message}
+                onChange={handleChange}
                 placeholder="Your Message"
                 rows={6}
                 className="rounded-md border border-white/15 bg-black/45 px-4 py-4 text-sm outline-none transition focus:border-[#69ff2f]"
-              />
+                />
 
               <button
                 type="submit"
                 className="rounded-md bg-[#69ff2f] px-7 py-4 text-[13px] font-black uppercase text-black transition hover:-translate-y-1 hover:bg-[#7cff45]"
               >
-                Send Message →
+                {loading ? "Sending..." : "Send Message →"}
               </button>
 
               <p className="flex items-center justify-center gap-2 text-xs text-white/60">
@@ -170,7 +233,7 @@ export default function ContactPage() {
           </div>
 
           <a
-            href="#quote"
+            href="/quote"
             className="rounded-md bg-[#69ff2f] px-8 py-4 text-[13px] font-black uppercase text-black transition hover:-translate-y-1 hover:bg-[#7cff45]"
           >
             Get A Free Quote →
@@ -200,55 +263,110 @@ export default function ContactPage() {
               Get in touch today for a free, no-obligation quote.
             </p>
 
-            <a className="mt-2 inline-block w-[320px] rounded bg-[#08ba1a] py-2 text-[13px] font-black uppercase">
-              Get Your Free Quote Today →
-            </a>
+            <Link
+              href="/quote"
+              className="mt-2 inline-block w-[320px] rounded bg-[#08ba1a] py-2 text-[13px] font-black uppercase text-white transition hover:bg-[#10d122]"
+            >
+              GET YOUR FREE QUOTE TODAY →
+            </Link>
           </div>
 
           <div className="grid gap-10 py-7 text-[13px] md:grid-cols-4">
             <div>
               <div className="flex items-center gap-3">
-                <Image src="/logo.png" alt="Logo" width={64} height={64} />
+                <div className="flex w-[120px] flex-col items-center">
+                  <Image src="/logo.png" alt="Logo" width={120} height={120} />
+
+                  <a
+                    href="https://www.facebook.com/auroraaustralis.lcs"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-4 inline-flex items-center rounded bg-[#1877F2] px-5 py-2 text-[13px] font-bold text-white transition hover:opacity-90"
+                  >
+                    Facebook
+                  </a>
+                </div>
 
                 <div>
                   <h3 className="text-[20px] font-black text-[#19ff37]">
                     AURORA AUSTRALIS
                   </h3>
-                  <p className="tracking-[0.12em]">LAWN CARE SERVICES</p>
+
+                  <p className="tracking-[0.12em]">
+                    LAWN CARE SERVICES
+                  </p>
                 </div>
               </div>
 
-              <p className="mt-3">Professional care. Outstanding results.</p>
+              <p className="mt-3">
+                Professional care. Outstanding results.
+              </p>
             </div>
-
             <div>
               <h4 className="font-black uppercase text-[#69ff2f]">Services</h4>
-              <p className="mt-3 leading-6">
-                Residential Lawn Mowing
-                <br />
-                Commercial Lawn Mowing
-                <br />
-                Garden Maintenance
-                <br />
-                Lawn Care
-              </p>
+              <ul className="mt-3 space-y-1 leading-6">
+                <li>
+                  <Link href="/services#lawn-mowing-packages" className="transition hover:text-[#69ff2f]">
+                    Residential Lawn Mowing
+                  </Link>
+                </li>
+
+                <li>
+                  <Link href="/services#lawn-mowing-packages" className="transition hover:text-[#69ff2f]">
+                    Commercial Lawn Mowing
+                  </Link>
+                </li>
+
+                <li>
+                  <Link href="/services#gardening-services" className="transition hover:text-[#69ff2f]">
+                    Garden Maintenance
+                  </Link>
+                </li>
+
+                <li>
+                  <Link href="/services#property-care-services" className="transition hover:text-[#69ff2f]">
+                    Lawn Care
+                  </Link>
+                </li>
+              </ul>
             </div>
 
             <div>
               <h4 className="font-black uppercase text-[#69ff2f]">
                 Quick Links
               </h4>
-              <p className="mt-3 leading-6">
-                Home
-                <br />
-                Services
-                <br />
-                About Us
-                <br />
-                Gallery
-                <br />
-                Contact Us
-              </p>
+
+              <ul className="mt-3 space-y-1 leading-6">
+                <li>
+                  <Link href="/" className="transition hover:text-[#69ff2f]">
+                    Home
+                  </Link>
+                </li>
+
+                <li>
+                  <Link href="/services" className="transition hover:text-[#69ff2f]">
+                    Services
+                  </Link>
+                </li>
+
+                <li>
+                  <Link href="/about" className="transition hover:text-[#69ff2f]">
+                    About Us
+                  </Link>
+                </li>
+
+                <li>
+                  <Link href="/gallery" className="transition hover:text-[#69ff2f]">
+                    Gallery 
+                  </Link>
+                </li>
+
+                <li>
+                  <Link href="/contact" className="transition hover:text-[#69ff2f]">
+                    Contact Us
+                  </Link>
+                </li>
+              </ul>
             </div>
 
             <div>

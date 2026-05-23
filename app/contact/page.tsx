@@ -205,14 +205,29 @@ export default function ContactPage() {
           </div>
 
         <div className="relative flex min-h-[320px] items-center justify-center overflow-hidden rounded-lg border border-white/10 bg-black/40 p-6">
-        <div className="relative h-[520px] w-[520px] overflow-hidden rounded-full border-2 border-[#69ff2f] shadow-[0_0_45px_rgba(105,255,47,0.22)]">
+          <div
+            className="
+              relative
+              w-[280px]
+              h-[280px]
+              sm:w-[420px]
+              sm:h-[420px]
+              md:w-[520px]
+              md:h-[520px]
+              overflow-hidden
+              rounded-full
+              border-2
+              border-[#69ff2f]
+              shadow-[0_0_45px_rgba(105,255,47,0.22)]
+            "
+          >
             <Image
-            src="/Service_location.png"
-            alt="Aurora Australis service area map"
-            fill
-            className="object-cover"
+              src="/Service_location.png"
+              alt="Aurora Australis service area map"
+              fill
+              className="object-cover"
             />
-        </div>
+          </div>
         </div>
         </div>
 

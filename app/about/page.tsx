@@ -34,7 +34,7 @@ export default function AboutPage() {
         <div className="absolute inset-0 bg-black/55" />
         <div className="absolute inset-0 bg-gradient-to-b from-emerald-950/40 via-black/30 to-[#061610]" />
 
-        <div className="relative z-10 mx-auto flex min-h-[78vh] max-w-7xl items-center px-6">
+        <div className="relative z-10 mx-auto flex min-h-[78vh] max-w-7xl items-center px-6 pt-[150px] pb-16 md:pt-0 md:pb-0">
           <div className="max-w-3xl">
             <p className="mb-4 text-sm font-semibold uppercase tracking-[0.35em] text-emerald-300">
               About AALCS

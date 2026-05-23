@@ -1,6 +1,11 @@
 import Image from "next/image";
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
+import {
+  lawnMowingServices,
+  gardeningServices,
+  propertyCareServices,
+} from "@/data/servicesData";
 import { Bebas_Neue, Satisfy } from "next/font/google";
 import {
   Tractor,
@@ -80,10 +85,21 @@ const services = [
   },
 ];
 
+const serviceLinks = [
+  ...lawnMowingServices.residentialPackages,
+  ...lawnMowingServices.whippersnipping,
+  ...lawnMowingServices.edging,
+  ...lawnMowingServices.mowingOnly,
+  ...lawnMowingServices.blowDownOnly,
+  ...lawnMowingServices.commercial,
+  ...gardeningServices,
+  ...propertyCareServices,
+];
+
 export default function HomePage() {
   return (
     <main className="overflow-hidden bg-black text-white">
-      <section className="relative min-h-[1150px]">
+      <section className="relative min-h-[1040px] md:min-h-[1150px]">
         <Image
           src="/hero.jpg"
           alt="Aurora Australis Lawn Care Services"
@@ -96,18 +112,18 @@ export default function HomePage() {
 
         <Navbar />
 
-        <div className="relative z-10 mx-auto flex min-h-[980px] max-w-[1700px] items-start px-12 pt-[165px]">
+        <div className="relative z-[80] mx-auto flex min-h-[640px] max-w-[1700px] items-start px-5 pt-[145px] sm:px-8 md:min-h-[980px] md:px-12 md:pt-[165px]">
           <div className="max-w-[980px]">
-          <h1 className={`${bebas.className} max-w-[980px] text-[132px] uppercase leading-[0.88] tracking-[0.01em] text-white drop-shadow-[0_4px_18px_rgba(0,0,0,0.8)]`}>
+          <h1 className={`${bebas.className} max-w-[980px] text-[58px] uppercase leading-[0.9] tracking-[0.01em] text-white drop-shadow-[0_4px_18px_rgba(0,0,0,0.8)] sm:text-[72px] md:text-[132px]`}>
             Professional Care.
             <br />
             <span className="text-[#00c832]">Outstanding</span> Results.
           </h1>
 
-          <p className={`${satisfy.className} mt-5 text-[72px] leading-none tracking-wide text-[#74ff54] drop-shadow-[0_3px_12px_rgba(0,0,0,0.7)]`}>
+          <p className={`${satisfy.className} mt-4 text-[38px] leading-none tracking-wide text-[#74ff54] drop-shadow-[0_3px_12px_rgba(0,0,0,0.7)] sm:text-[48px] md:mt-5 md:text-[72px]`}>
             Let Your Property Shine
           </p>
-            <p className="mt-8 max-w-[760px] text-[32px] leading-[1.18] font-medium leading-6 text-white drop-shadow-[0_3px_10px_rgba(0,0,0,0.75)]">
+            <p className="mt-6 max-w-[760px] text-[22px] font-medium leading-[1.18] text-white drop-shadow-[0_3px_10px_rgba(0,0,0,0.75)] sm:text-[26px] md:mt-8 md:text-[32px]">
               Reliable, high-quality lawn and garden care for homes and
               businesses in{" "}
               <span className="font-bold text-[#19ff37]">
@@ -115,25 +131,42 @@ export default function HomePage() {
               </span>
             </p>
 
-            <div className="mt-12 flex gap-7">
+            <div className="mt-8 flex flex-col gap-4 sm:flex-row md:mt-12 md:gap-7">
               <a
                 href="/quote"
-                className="rounded-md bg-[#08c51f] px-12 py-6 text-[24px] font-black uppercase tracking-wide shadow-[0_0_18px_rgba(0,255,60,0.35)] transition hover:bg-[#10e132]"
+                className="rounded-md bg-[#08c51f] px-7 py-4 text-center text-[18px] font-black uppercase tracking-wide shadow-[0_0_18px_rgba(0,255,60,0.35)] transition hover:bg-[#10e132] sm:px-8 md:px-12 md:py-6 md:text-[24px]"
               >
                 Get A Free Quote →
               </a>
 
-              <a
-                href="#services"
-                className="rounded-md border border-[#73ff38] bg-black/35 px-12 py-6 text-[24px] font-black uppercase tracking-wide shadow-[0_0_18px_rgba(0,0,0,0.35)] transition hover:bg-[#0b2618]"
-              >
-                Our Services →
-              </a>
+              <div className="relative group">
+                <a
+                  href="/services"
+                  className="block rounded-md border border-[#73ff38] bg-black/35 px-7 py-4 text-center text-[18px] font-black uppercase tracking-wide shadow-[0_0_18px_rgba(0,0,0,0.35)] transition hover:bg-[#0b2618] sm:px-8 md:px-12 md:py-6 md:text-[24px]"
+                >
+                  View Services →
+                </a>
+
+                <div className="invisible absolute left-0 top-full z-[9999] mt-4 w-[420px] rounded-2xl border border-[#73ff38]/20 bg-black/95 p-4 opacity-0 shadow-[0_0_35px_rgba(0,255,120,0.12)] backdrop-blur-md transition-all duration-200 group-hover:visible group-hover:opacity-100">
+                  <div className="max-h-[500px] overflow-y-auto pr-2">
+                    {serviceLinks.map((service) => (
+                      <a
+                        key={service.title}
+                        href={service.galleryLink.replace("/gallery", "/services")}
+                        className="block rounded-xl px-4 py-3 text-[15px] font-semibold text-white/85 transition hover:bg-[#0b2618] hover:text-[#73ff38]"
+                      >
+                        {service.title}
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
             </div>
           </div>
         </div>
 
-        <div className="absolute bottom-10 left-1/2 z-20 grid w-[92%] max-w-[1400px] -translate-x-1/2 rounded-2xl border border-[#5cff70]/15 bg-black/38 px-7 py-6 shadow-[0_0_50px_rgba(0,255,120,0.10)] backdrop-blur-md md:grid-cols-4">
+        <div className="relative z-20 mx-auto mb-10 grid w-[92%] max-w-[1400px] grid-cols-1 gap-4 rounded-2xl border border-[#5cff70]/15 bg-black/45 px-5 py-5 shadow-[0_0_50px_rgba(0,255,120,0.10)] backdrop-blur-md sm:grid-cols-2 md:absolute md:bottom-10 md:left-1/2 md:mb-0 md:-translate-x-1/2 md:grid-cols-4 md:px-7 md:py-6">
             {features.map((feature) => {
               const Icon = feature.icon;
 
@@ -258,15 +291,15 @@ export default function HomePage() {
             </Link>
           </div>
 
-          <div className="grid grid-cols-3 gap-5 text-center">
+          <div className="grid grid-cols-1 gap-5 text-center sm:grid-cols-3">
             {["LOCAL\nEXPERTS", "QUALITY\nGUARANTEED", "CUSTOMER\nFOCUSED"].map(
               (item) => (
                 <div
                   key={item}
-                  className="rounded-xl border border-[#69ff2f] bg-black/45 px-5 py-8 text-[17px] font-bold"
+                  className="rounded-xl border border-[#69ff2f] bg-black/45 px-4 py-7 text-[16px] font-bold sm:px-3 sm:text-[14px] md:px-5 md:text-[17px]"
                 >
                   <div className="mb-4 text-5xl text-[#69ff2f]">♡</div>
-                  <p className="whitespace-pre-line">{item}</p>
+                  <p className="whitespace-pre-line break-words leading-tight">{item}</p>
                 </div>
               )
             )}
