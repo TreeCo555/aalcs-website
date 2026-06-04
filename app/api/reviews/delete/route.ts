@@ -1,35 +1,58 @@
 import { NextResponse } from "next/server";
-import fs from "fs";
-import path from "path";
+import { sql } from "@/lib/reviewsDb";
 
-const approvedReviewsPath = path.join(
-  process.cwd(),
-  "data",
-  "reviews",
-  "approvedReviews.json"
-);
+type DeleteReviewBody = {
+  id?: unknown;
+};
 
-export async function POST(req: Request) {
+type DeletedReviewRow = {
+  id: string;
+};
+
+export async function POST(request: Request) {
   try {
-    const { id } = await req.json();
+    const body = (await request.json()) as DeleteReviewBody;
 
-    const approvedReviews = JSON.parse(
-      fs.readFileSync(approvedReviewsPath, "utf-8")
-    );
+    const id = typeof body.id === "string" ? body.id : "";
 
-    const updatedReviews = approvedReviews.filter(
-      (review: any) => review.id !== id
-    );
+    if (!id) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Review ID is required.",
+        },
+        { status: 400 }
+      );
+    }
 
-    fs.writeFileSync(
-      approvedReviewsPath,
-      JSON.stringify(updatedReviews, null, 2)
-    );
+    const deletedRows = (await sql`
+      DELETE FROM reviews
+      WHERE id = ${id}
+      RETURNING id
+    `) as DeletedReviewRow[];
 
-    return NextResponse.json({ success: true });
+    if (deletedRows.length === 0) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Review not found.",
+        },
+        { status: 404 }
+      );
+    }
+
+    return NextResponse.json({
+      success: true,
+      message: "Review deleted.",
+    });
   } catch (error) {
+    console.error("Failed to delete review:", error);
+
     return NextResponse.json(
-      { success: false, error: "Failed to delete review" },
+      {
+        success: false,
+        message: "Failed to delete review.",
+      },
       { status: 500 }
     );
   }

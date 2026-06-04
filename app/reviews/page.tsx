@@ -260,22 +260,35 @@ export default function ReviewsPage() {
     <form
     className="mt-6 grid gap-5"
     onSubmit={async (e) => {
-    e.preventDefault();
+      e.preventDefault();
+      setGeneralSubmitted(false);
 
-    await fetch("/api/reviews", {
-        method: "POST",
-        headers: {
-        "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-        reviewType: "general",
-        client: generalClient.trim() || "Anonymous",
-        rating: generalRating,
-        review: generalReview,
-        }),
-    });
+      try {
+        const response = await fetch("/api/reviews", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            reviewType: "general",
+            client: generalClient.trim() || "Anonymous",
+            rating: generalRating,
+            review: generalReview,
+          }),
+        });
 
-    setGeneralSubmitted(true);
+        const data = await response.json();
+
+        if (!response.ok || !data.success) {
+          alert(data.message || "Failed to submit review. Please try again.");
+          return;
+        }
+
+        setGeneralSubmitted(true);
+      } catch (error) {
+        console.error("Failed to submit general review:", error);
+        alert("Failed to submit review. Please try again.");
+      }
     }}
     >
         <div>
@@ -585,23 +598,36 @@ export default function ReviewsPage() {
         <form
         className="mt-6 grid gap-5"
         onSubmit={async (e) => {
-        e.preventDefault();
+          e.preventDefault();
+          setServiceSubmitted(false);
 
-        await fetch("/api/reviews", {
-            method: "POST",
-            headers: {
-            "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-            reviewType: "service",
-            serviceTitle: selectedServiceData.title,
-            client: serviceClient.trim() || "Anonymous",
-            rating: serviceRating,
-            review: serviceReview,
-            }),
-        });
+          try {
+            const response = await fetch("/api/reviews", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                reviewType: "service",
+                serviceTitle: selectedServiceData.title,
+                client: serviceClient.trim() || "Anonymous",
+                rating: serviceRating,
+                review: serviceReview,
+              }),
+            });
 
-        setServiceSubmitted(true);
+            const data = await response.json();
+
+            if (!response.ok || !data.success) {
+              alert(data.message || "Failed to submit review. Please try again.");
+              return;
+            }
+
+            setServiceSubmitted(true);
+          } catch (error) {
+            console.error("Failed to submit service review:", error);
+            alert("Failed to submit review. Please try again.");
+          }
         }}
         >
             <div>

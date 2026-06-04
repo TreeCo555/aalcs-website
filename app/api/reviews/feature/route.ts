@@ -1,72 +1,124 @@
-import { promises as fs } from "fs";
-import path from "path";
 import { NextResponse } from "next/server";
+import { sql } from "@/lib/reviewsDb";
+
+type FeatureReviewBody = {
+  id?: unknown;
+  featured?: unknown;
+  featuredVideoId?: unknown;
+};
+
+type ReviewRow = {
+  id: string;
+  featured: boolean;
+  featured_video_id: string | null;
+};
+
+type UpdatedReviewRow = {
+  id: string;
+};
 
 export async function POST(request: Request) {
   try {
-    const body = await request.json();
+    const body = (await request.json()) as FeatureReviewBody;
 
-    const approvedPath = path.join(
-      process.cwd(),
-      "data",
-      "reviews",
-      "approvedReviews.json"
-    );
+    const id = typeof body.id === "string" ? body.id : "";
 
-    const data = await fs.readFile(approvedPath, "utf8");
-    const reviews = JSON.parse(data);
+    if (!id) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Review ID is required.",
+        },
+        { status: 400 }
+      );
+    }
 
-    const { id, featured, featuredVideoId } = body;
+    const existingRows = (await sql`
+      SELECT
+        id,
+        featured,
+        featured_video_id
+      FROM reviews
+      WHERE id = ${id}
+        AND status = 'approved'
+      LIMIT 1
+    `) as ReviewRow[];
 
-    const updatedReviews = reviews.map((review: any) => {
-      // Remove video assignment from any existing review
-      // already assigned to this video
-      if (
-        typeof featuredVideoId === "string" &&
-        review.featuredVideoId === featuredVideoId &&
-        review.id !== id
-      ) {
-        return {
-          ...review,
-          featured: false,
-          featuredVideoId: null,
-        };
-      }
+    const existingReview = existingRows[0];
 
-      // Update selected review
-      if (review.id === id) {
-        return {
-          ...review,
-          featured:
-            typeof featured === "boolean"
-              ? featured
-              : !review.featured,
+    if (!existingReview) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Approved review not found.",
+        },
+        { status: 404 }
+      );
+    }
 
-          featuredVideoId:
-            typeof featuredVideoId === "string"
-              ? featuredVideoId
-              : featured === false
-                ? null
-                : review.featuredVideoId ?? null,
-        };
-      }
+    const requestedVideoId =
+      typeof body.featuredVideoId === "string" &&
+      body.featuredVideoId.trim()
+        ? body.featuredVideoId.trim()
+        : null;
 
-      return review;
-    });
+    const nextFeatured =
+      typeof body.featured === "boolean"
+        ? body.featured
+        : requestedVideoId
+          ? true
+          : !existingReview.featured;
 
-    await fs.writeFile(
-      approvedPath,
-      JSON.stringify(updatedReviews, null, 2),
-      "utf8"
-    );
+    const nextVideoId =
+      nextFeatured && requestedVideoId
+        ? requestedVideoId
+        : nextFeatured
+          ? existingReview.featured_video_id
+          : null;
+
+    if (nextVideoId) {
+      await sql`
+        UPDATE reviews
+        SET
+          featured = FALSE,
+          featured_video_id = NULL
+        WHERE featured_video_id = ${nextVideoId}
+          AND id <> ${id}
+      `;
+    }
+
+    const updatedRows = (await sql`
+      UPDATE reviews
+      SET
+        featured = ${nextFeatured},
+        featured_video_id = ${nextVideoId}
+      WHERE id = ${id}
+        AND status = 'approved'
+      RETURNING id
+    `) as UpdatedReviewRow[];
+
+    if (updatedRows.length === 0) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Review could not be updated.",
+        },
+        { status: 404 }
+      );
+    }
 
     return NextResponse.json({
       success: true,
+      featured: nextFeatured,
+      featuredVideoId: nextVideoId,
     });
-  } catch {
+  } catch (error) {
+    console.error("Failed to update featured review:", error);
+
     return NextResponse.json(
       {
         success: false,
+        message: "Failed to update featured review.",
       },
       { status: 500 }
     );

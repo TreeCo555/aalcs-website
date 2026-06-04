@@ -1,88 +1,88 @@
-import { promises as fs } from "fs";
-import path from "path";
 import { NextResponse } from "next/server";
+import { sql } from "@/lib/reviewsDb";
+
+type ModerateReviewBody = {
+  id?: unknown;
+  status?: unknown;
+};
+
+type UpdatedReviewRow = {
+  id: string;
+};
 
 export async function POST(request: Request) {
   try {
-    const body = await request.json();
-    const { id, status } = body;
+    const body = (await request.json()) as ModerateReviewBody;
 
-    if (!id || !["approved", "rejected"].includes(status)) {
+    const id = typeof body.id === "string" ? body.id : "";
+    const status =
+      body.status === "approved" || body.status === "rejected"
+        ? body.status
+        : null;
+
+    if (!id || !status) {
       return NextResponse.json(
-        { success: false, message: "Invalid moderation request." },
+        {
+          success: false,
+          message: "Invalid moderation request.",
+        },
         { status: 400 }
       );
     }
 
-    const submittedPath = path.join(
-      process.cwd(),
-      "data",
-      "reviews",
-      "submittedReviews.json"
-    );
+    let updatedRows: UpdatedReviewRow[];
 
-    const approvedPath = path.join(
-      process.cwd(),
-      "data",
-      "reviews",
-      "approvedReviews.json"
-    );
+    if (status === "approved") {
+      updatedRows = (await sql`
+        UPDATE reviews
+        SET
+          status = 'approved',
+          approved_at = NOW(),
+          featured = FALSE,
+          featured_video_id = NULL
+        WHERE id = ${id}
+          AND status = 'pending'
+        RETURNING id
+      `) as UpdatedReviewRow[];
+    } else {
+      updatedRows = (await sql`
+        UPDATE reviews
+        SET
+          status = 'rejected',
+          approved_at = NULL,
+          featured = FALSE,
+          featured_video_id = NULL
+        WHERE id = ${id}
+          AND status = 'pending'
+        RETURNING id
+      `) as UpdatedReviewRow[];
+    }
 
-    const submittedData = await fs.readFile(submittedPath, "utf8");
-    const submittedReviews = JSON.parse(submittedData);
-
-    const selectedReview = submittedReviews.find(
-      (review: any) => review.id === id
-    );
-
-    if (!selectedReview) {
+    if (updatedRows.length === 0) {
       return NextResponse.json(
-        { success: false, message: "Review not found." },
+        {
+          success: false,
+          message: "Pending review not found.",
+        },
         { status: 404 }
       );
     }
-
-    const remainingSubmittedReviews = submittedReviews.filter(
-      (review: any) => review.id !== id
-    );
-
-    if (status === "approved") {
-      const approvedData = await fs.readFile(approvedPath, "utf8");
-      const approvedReviews = JSON.parse(approvedData);
-
-    approvedReviews.push({
-      ...selectedReview,
-      status: "approved",
-      featured: false,
-      featuredVideoId: null,
-      approvedAt: new Date().toISOString(),
-    });
-
-      await fs.writeFile(
-        approvedPath,
-        JSON.stringify(approvedReviews, null, 2),
-        "utf8"
-      );
-    }
-
-    await fs.writeFile(
-      submittedPath,
-      JSON.stringify(remainingSubmittedReviews, null, 2),
-      "utf8"
-    );
 
     return NextResponse.json({
       success: true,
       message:
         status === "approved"
-          ? "Review approved and moved to approved reviews."
-          : "Review rejected and removed from pending reviews.",
+          ? "Review approved."
+          : "Review rejected.",
     });
   } catch (error) {
-    console.error(error);
+    console.error("Failed to moderate review:", error);
 
     return NextResponse.json(
-      { success: false, message: "Failed to moderate review." },
+      {
+        success: false,
+        message: "Failed to moderate review.",
+      },
       { status: 500 }
     );
   }

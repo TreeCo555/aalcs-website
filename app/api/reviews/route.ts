@@ -1,47 +1,115 @@
 import { NextResponse } from "next/server";
-import { promises as fs } from "fs";
-import path from "path";
+import { sql } from "@/lib/reviewsDb";
 
+type ReviewRequestBody = {
+  reviewType?: unknown;
+  serviceTitle?: unknown;
+  client?: unknown;
+  rating?: unknown;
+  review?: unknown;
+};
 
 export async function POST(request: Request) {
   try {
-    const body = await request.json();
+    const body = (await request.json()) as ReviewRequestBody;
 
-    const review = {
-      id: crypto.randomUUID(),
-      reviewType: body.reviewType,
-      serviceTitle: body.serviceTitle ?? "",
-      client: body.client?.trim() || "Anonymous",
-      rating: body.rating,
-      review: body.review,
-      status: "pending",
-      submittedAt: new Date().toISOString(),
-    };
+    const reviewType =
+      body.reviewType === "general" || body.reviewType === "service"
+        ? body.reviewType
+        : null;
 
-    const filePath = path.join(
-      process.cwd(),
-      "data",
-      "reviews",
-      "submittedReviews.json"
-    );
+    const serviceTitle =
+      typeof body.serviceTitle === "string" ? body.serviceTitle.trim() : "";
 
-    const existingData = await fs.readFile(filePath, "utf8");
-    const reviews = JSON.parse(existingData);
+    const client =
+      typeof body.client === "string" && body.client.trim()
+        ? body.client.trim()
+        : "Anonymous";
 
-    reviews.push(review);
+    const rating =
+      typeof body.rating === "number" ? body.rating : Number(body.rating);
 
-    await fs.writeFile(
-      filePath,
-      JSON.stringify(reviews, null, 2),
-      "utf8"
-    );
+    const reviewText =
+      typeof body.review === "string" ? body.review.trim() : "";
+
+    if (!reviewType) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Invalid review type.",
+        },
+        { status: 400 }
+      );
+    }
+
+    if (reviewType === "service" && !serviceTitle) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "A service must be selected.",
+        },
+        { status: 400 }
+      );
+    }
+
+    if (!Number.isInteger(rating) || rating < 1 || rating > 5) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Rating must be between 1 and 5.",
+        },
+        { status: 400 }
+      );
+    }
+
+    if (!reviewText || reviewText.length > 1000) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Review must contain between 1 and 1000 characters.",
+        },
+        { status: 400 }
+      );
+    }
+
+    const id = crypto.randomUUID();
+    const submittedAt = new Date().toISOString();
+
+    await sql`
+      INSERT INTO reviews (
+        id,
+        review_type,
+        service_title,
+        client,
+        rating,
+        review,
+        status,
+        featured,
+        featured_video_id,
+        submitted_at,
+        approved_at
+      )
+      VALUES (
+        ${id},
+        ${reviewType},
+        ${serviceTitle},
+        ${client},
+        ${rating},
+        ${reviewText},
+        'pending',
+        FALSE,
+        NULL,
+        ${submittedAt},
+        NULL
+      )
+    `;
 
     return NextResponse.json({
       success: true,
       message: "Review submitted for approval.",
     });
   } catch (error) {
-    console.error(error);
+    console.error("Failed to submit review:", error);
 
     return NextResponse.json(
       {
