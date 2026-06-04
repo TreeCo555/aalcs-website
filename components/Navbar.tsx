@@ -45,6 +45,7 @@ export default function Navbar() {
             <Link href="/services" className="block py-3">Services</Link>
             <Link href="/about" className="block py-3">About Us</Link>
             <Link href="/gallery" className="block py-3">Gallery</Link>
+            <Link href="/reviews" className="block py-3">Reviews</Link>
             <Link href="/contact" className="block py-3">Contact Us</Link>
             <Link href="/quote" className="mt-3 block rounded bg-[#08c51f] px-4 py-4">
               Get A Free Quote →
@@ -56,9 +57,9 @@ export default function Navbar() {
           <Link href="/" className={linkClass("/")}>Home</Link>
           <Link href="/services" className={linkClass("/services")}>Services</Link>
           <Link href="/about" className={linkClass("/about")}>About Us</Link>
-          <Link href="/gallery" className="transition duration-300 hover:-translate-y-1 hover:text-[#69ff2f]">Gallery</Link>
+          <Link href="/gallery" className={linkClass("/gallery")}>Gallery</Link>
+          <Link href="/reviews" className={linkClass("/reviews")}>Reviews</Link>
           <Link href="/contact" className={linkClass("/contact")}>Contact Us</Link>
-
           <Link
             href="/quote"
             className="rounded border border-[#69ff2f] px-6 py-4 text-white transition duration-300 hover:-translate-y-1 hover:bg-[#19b51f]"

@@ -1,0 +1,24 @@
+How to; 
+
+Add featured videos. 
+
+"Yard Clean-Ups & Property Restoration": [
+  {
+    id: "yard-clean-ups-&-property-restoration-video-1",
+    youtubeId: "kMY5XxVE_Zw",
+    title: "Yard Clean-Ups & Property Restoration Video 1",
+    review: "",
+    client: "",
+    rating: 5,
+    date: "",
+  },
+  {
+    id: "standard-residential-video-2",
+    youtubeId: "SECOND_YOUTUBE_ID_HERE",
+    title: "Standard Residential Lawn Maintenance Video 2",
+    review: "",
+    client: "",
+    rating: 5,
+    date: "",
+  },
+],

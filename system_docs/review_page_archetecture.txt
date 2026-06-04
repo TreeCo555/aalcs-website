@@ -1,0 +1,76 @@
+
+-Connect actual featured video/s to the website via youtube link 
+-For general reviews have only 4 show at any given time, 
+also have the reviews fade in and out to new reviews. 
+-Have the admin dashboard capable of removing aproved reviews
+from the review page both service and general 
+
+
+1. Presentation;
+
+a) 
+1.first impression will showcase a list of all services
+and packages offered by AALCS which can be found in the 
+current_services&packages.txt shown as a list. 
+
+2.First impression will also showcase up the very top a general 
+AALCS review area where all general reviews that clients didnt 
+Updated Notes: 
+
+
+
+
+go directly to the list but instead opted to use the general 
+aalcs review area instead belongs. 
+
+b) 
+1.second impression. After selecting a service or package that 
+service or package selected will in order from top to 
+bottom showcase first the "first featured video along with the 
+clients review below featured and there star rating. Than the secound
+featured video along with the clients review below featured and there
+star rating than so on and so forth. 
+
+Once all featured videos and 
+relevant featured clients reviews has been shown for that service or
+package than all other reviews that are associated with that service 
+or package are shown below that service or package the user is 
+leaving a review for. Through out each section where there is 
+a featured video and featured client review their is also an option to 
+collapse the entire service or package display so that it returns to 
+the minimalized services and packages list to choose from.  
+
+conditions: 
+-A featured video will be directly linked to a specific youtube video
+-There is an option for the user to go directly to the youtube channel
+but there is also an option to play the featured video directly from 
+the webpage. 
+-the featured reviews do not come directly from the youtube channel but
+are instead added by the user and than approved by me to be considered 
+as a featured review that belongs with said featured video.  
+
+
+2.for the general aalcs review area make it simple at first impression
+like, would you like to leave a review? Than once the user clicks on 
+that prompt a comment section along with a 5 star review opens up. This 
+area can also be easily collapsable so that the user can view the list
+of services and packages with reviews if they choose or leave the page
+to find another one. 
+
+2. Mechanisms;
+
+List structure: 
+-The services or packages with the most featured videos and featured 
+reviews are shown up the top of the services/packages list. 
+
+-if a service or package does not yet have a featured video/s attached 
+with the service or package the next service or package in the list is 
+the one with the most reviews. 
+
+-the services or packages that do not yet have a single review or featured
+video will belong at the bottom of the list. 
+
+a) First mechanisms
+
+b) secound mechanisms;
+

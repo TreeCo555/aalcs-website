@@ -916,6 +916,11 @@ export default function GalleryPage() {
                 <li><Link href="/services">Services</Link></li>
                 <li><Link href="/about">About Us</Link></li>
                 <li><Link href="/gallery">Gallery</Link></li>
+                <li>
+                  <Link href="/reviews" className="transition hover:text-[#69ff2f]">
+                    Reviews
+                  </Link>
+                </li>
                 <li><Link href="/contact">Contact Us</Link></li>
               </ul>
             </div>

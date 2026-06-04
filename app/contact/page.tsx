@@ -377,6 +377,12 @@ export default function ContactPage() {
                 </li>
 
                 <li>
+                  <Link href="/reviews" className="transition hover:text-[#69ff2f]">
+                    Reviews
+                  </Link>
+                </li>
+
+                <li>
                   <Link href="/contact" className="transition hover:text-[#69ff2f]">
                     Contact Us
                   </Link>
