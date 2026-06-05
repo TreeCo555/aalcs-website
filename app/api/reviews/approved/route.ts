@@ -14,6 +14,7 @@ export async function GET() {
         status,
         featured,
         featured_video_id,
+        show_in_general,
         submitted_at,
         approved_at
       FROM reviews
@@ -31,6 +32,7 @@ export async function GET() {
       status: row.status,
       featured: row.featured,
       featuredVideoId: row.featured_video_id,
+      showInGeneralReviews: row.show_in_general,
       submittedAt: row.submitted_at,
       approvedAt: row.approved_at,
     }));

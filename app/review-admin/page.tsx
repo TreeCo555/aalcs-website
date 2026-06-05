@@ -14,6 +14,7 @@ type ReviewRow = {
   status: "pending" | "approved" | "rejected";
   featured: boolean;
   featured_video_id: string | null;
+  show_in_general: boolean;
   submitted_at: string | Date;
   approved_at: string | Date | null;
 };
@@ -28,6 +29,7 @@ type SubmittedReview = {
   status: "pending" | "approved" | "rejected";
   featured: boolean;
   featuredVideoId: string | null;
+  showInGeneralReviews: boolean;
   submittedAt: string | Date;
   approvedAt: string | Date | null;
 };
@@ -47,6 +49,7 @@ async function getReviews(): Promise<{
       status,
       featured,
       featured_video_id,
+      show_in_general,
       submitted_at,
       approved_at
     FROM reviews
@@ -64,6 +67,7 @@ async function getReviews(): Promise<{
     status: row.status,
     featured: row.featured,
     featuredVideoId: row.featured_video_id,
+    showInGeneralReviews: row.show_in_general,
     submittedAt: row.submitted_at,
     approvedAt: row.approved_at,
   }));
@@ -189,6 +193,15 @@ export default async function ReviewAdminPage() {
                         </span>{" "}
                         {review.featured ? "Yes" : "No"}
                       </p>
+
+                      {review.reviewType === "service" && (
+                        <p>
+                          <span className="font-bold text-[#69ff2f]">
+                            Shown In General Reviews:
+                          </span>{" "}
+                          {review.showInGeneralReviews ? "Yes" : "No"}
+                        </p>
+                      )}
                     </div>
 
                     <ReviewModerationActions
@@ -196,6 +209,8 @@ export default async function ReviewAdminPage() {
                       showFeatureButton={true}
                       isFeatured={review.featured}
                       featuredVideoId={review.featuredVideoId}
+                      reviewType={review.reviewType}
+                      showInGeneralReviews={review.showInGeneralReviews}
                     />
                   </div>
                 ))

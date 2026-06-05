@@ -117,9 +117,11 @@ export default function ReviewsPage() {
     }, []);
 
     const approvedGeneralReviews = approvedReviews.filter(
-    (review) => review.reviewType === "general"
+      (review) =>
+        review.reviewType === "general" ||
+        review.showInGeneralReviews === true
     );
-
+    
   const openService = (title: string) => {
     setSelectedService(title);
 

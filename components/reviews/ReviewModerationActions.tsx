@@ -8,6 +8,8 @@ type Props = {
   showFeatureButton?: boolean;
   isFeatured?: boolean;
   featuredVideoId?: string | null;
+  reviewType?: "general" | "service";
+  showInGeneralReviews?: boolean;
 };
 
 const videoOptions = Object.entries(featuredVideos).flatMap(
@@ -23,7 +25,10 @@ export default function ReviewModerationActions({
   showFeatureButton = false,
   isFeatured = false,
   featuredVideoId = null,
+  reviewType,
+  showInGeneralReviews = false,
 }: Props) {
+
   const router = useRouter();
 
   const moderateReview = async (status: "approved" | "rejected") => {
@@ -45,6 +50,19 @@ export default function ReviewModerationActions({
 
     router.refresh();
   };
+
+const toggleGeneralDisplay = async () => {
+  await fetch("/api/reviews/general-display", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      id: reviewId,
+      showInGeneralReviews: !showInGeneralReviews,
+    }),
+  });
+
+  router.refresh();
+};
 
   const makeGeneralReview = async () => {
     await fetch("/api/reviews/feature", {
@@ -110,6 +128,17 @@ export default function ReviewModerationActions({
           >
             {isFeatured ? "Unfeature" : "⭐ Feature"}
           </button>
+
+        {reviewType === "service" && (
+          <button
+            onClick={toggleGeneralDisplay}
+            className="rounded-full border border-[#69ff2f] px-5 py-2 font-bold text-[#69ff2f]"
+          >
+            {showInGeneralReviews
+              ? "Hide From General Reviews"
+              : "Show In General Reviews"}
+          </button>
+        )}
 
           <select
             value={featuredVideoId ?? ""}
