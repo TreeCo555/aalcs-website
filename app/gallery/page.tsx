@@ -644,12 +644,19 @@ function GalleryPhoto({
   const imageSrc = `${imageBasePath}.${supportedExtensions[extensionIndex]}`;
 
   return (
-    <div className="overflow-hidden rounded-2xl border border-white/10 bg-slate-900">
+    <a
+      href={imageSrc}
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label={`Open full-size ${alt}`}
+      className="block overflow-hidden rounded-2xl border border-white/10 bg-slate-900"
+    >
       <img
         src={imageSrc}
         loading="lazy"
+        decoding="async"
         alt={alt}
-        className="h-44 w-full object-cover"
+        className="block h-auto w-full"
         onError={() => {
           const nextExtensionIndex = extensionIndex + 1;
 
@@ -660,7 +667,7 @@ function GalleryPhoto({
           }
         }}
       />
-    </div>
+    </a>
   );
 }
 
@@ -683,7 +690,7 @@ function PhotoGrid({
         {title}
       </h6>
 
-      <div className="grid gap-3 sm:grid-cols-3">
+      <div className="grid gap-4 sm:grid-cols-2">
         {images.map((image, index) => (
           <GalleryPhoto
             key={image}
@@ -699,7 +706,7 @@ function PhotoGrid({
 function JobAccordion({ job }: { job: GalleryJob }) {
   return (
     <Accordion title={job.title} subtitle={job.location} level="job">
-      <div className="grid gap-6 lg:grid-cols-2">
+      <div className="grid gap-8 xl:grid-cols-2">
         <PhotoGrid title="Before Photos" images={job.beforeImages} type="before" />
         <PhotoGrid title="After Photos" images={job.afterImages} type="after" />
       </div>
